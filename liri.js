@@ -1,11 +1,13 @@
-var request = require('request');
-var spotify = require('spotify'); 
-var twitter = require('twitter');
+var Request = require('request');
+var Spotify = require('spotify'); 
+var Twitter = require('twitter');
 
 // 4. At the top of the  liri.js  file, write the code you need to grab the data from keys.js. Then store the keys in a variable.
 
 var keys = require("./keys.js");
+// console.log(keys);
 
+var client = new Twitter(keys.twitterKeys);
 	// TEST 
 	// console.log(keys.twitterKeys);
 	// console.log(keys.twitterKeys.consumer_key);
@@ -19,41 +21,44 @@ var keys = require("./keys.js");
 
 // TWITTER 
 
-if (process.argv[2] === 'my-tweets'){
-	console.log("tweet tweet");
+// This will show your last 20 tweets and when they were created at in your terminal/bash window.
 
-	// ◦This will show your last 20 tweets and when they were created at in your terminal/bash window.
-}
+if (process.argv[2] === "my-tweets"){	
+
+	var params = {screen_name: "wutup_castleman"};	
+
+	client.get('search/tweets', {q: "wutup_castleman"}, function(error, tweets, response){
+		if (error){
+		  	console.log('error:', error); // Print the error if one occurred 
+		  	console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+	  	} else {
+	  		console.log("Bryan tweeted: '" + tweets["statuses"][0].text + "' Tweeted on: " + tweets["statuses"][0]["created_at"]);
+	  	}
+	});
+		
+};
 
 // SPOTIFY 
 
 if (process.argv[2] === 'spotify-this-song'){
-	console.log("I'm playing a song");
-
+	
 	//  node liri.js spotify-this-song '<song name here>' 
 	var nodeArgs = process.argv; 
 	var song = "";
 
 	for (i=3;i<nodeArgs.length;i++){	
-
-	// Build a string with the address.
-  		song = song + " " + nodeArgs[i];	
-
+  		song = song + " " + nodeArgs[i];
 	}
-	// theSong = theSong.toString();
-	console.log("Searching for:" + song);
-
-
 	
-	spotify.search({ type: 'track', query: song }, function(err, data) {
+	console.log("Searching for:" + song);
+	
+	Spotify.search({ type: 'track', query: song }, function(error, data) {
 	    
-	    if ( err ) {
-	        console.log('Error occurred: ' + err);
+	    if (error) {
+	        console.log('Error occurred: ' + error);
 	        return;
 	    } else {
-	    	// console.log(JSON.stringify(data, null, 2));
-
-	    	// console.log(JSON.stringify(data, null, 2));	    	
+	    	console.log(data);	    	
 
 	    	// ◦This will show the following information about the song in your terminal/bash window
 			// ◾Artist(s)
@@ -70,7 +75,7 @@ if (process.argv[2] === 'spotify-this-song'){
 
 	
 
-}
+};
 
 // OMDB API using REQUEST
 
