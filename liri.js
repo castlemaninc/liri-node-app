@@ -1,18 +1,18 @@
+// Require Node Packages for Liri.js 
 var Request = require('request');
 var Spotify = require('spotify'); 
 var Twitter = require('twitter');
 var fs = require('fs');
 
-// 4. At the top of the  liri.js  file, write the code you need to grab the data from keys.js. Then store the keys in a variable.
-
+// Grabs data from keys.js and stores in variable called keys
 var keys = require("./keys.js");
 // console.log(keys);
 
-var client = new Twitter(keys.twitterKeys);
-	// TEST 
-	// console.log(keys.twitterKeys);
-	// console.log(keys.twitterKeys.consumer_key);
+var client = new Twitter(keys.twitterKeys);	
+// console.log(keys.twitterKeys);
+// console.log(keys.twitterKeys.consumer_key);
 
+// stores third argument in variable called action 
 var action = process.argv[2];
 
 switch (action) {
@@ -34,7 +34,6 @@ switch (action) {
 }
 
 // TWITTER 
-
 // This will show my last 20 tweets and when they were created in terminal/bash
 function listTweets(){
 	var params = {screen_name: "wutup_castleman"};	
@@ -56,13 +55,13 @@ function listTweets(){
 
 
 // SPOTIFY
-function spotifyThis(){
+function spotifyThis(){	
 	
-	//  node liri.js spotify-this-song '<song name here>' 
 	var nodeArgs = process.argv; 
 	var song = "";
 
-	for (i=3;i<nodeArgs.length;i++){	
+	for (i=3;i<nodeArgs.length;i++){
+		// takes arguments, separates them with a space and stores them as a string in the song variable 	
   		song = song + " " + nodeArgs[i];
 	}
 
@@ -92,8 +91,6 @@ function spotifyThis(){
 	    }
  
 	});
-	
-
 };
 
 // OMDB API using REQUEST
@@ -102,7 +99,8 @@ function movieLookUp(){
 	var nodeArgs = process.argv; 
 	var movie = nodeArgs[3];
 
-	for (i=4;i<nodeArgs.length;i++){		
+	for (i=4;i<nodeArgs.length;i++){
+		// stores arguments into a string separted by + symbol		
 		movie += "+" + nodeArgs[i];
 	};
 
@@ -116,6 +114,8 @@ function movieLookUp(){
 	// console.log(movieQueryURL)
 	// console.log("Searching for:" + movie);
 
+
+	// uses the Request Node package to query the OMDB API 
 	Request(movieQueryURL, function (error, response, body) {
 
 	  if (error){
@@ -152,8 +152,8 @@ function movieLookUp(){
 
 function doIt(){
 
-  	// Using the  fs  Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
-  	// It should run  spotify-this-song  for "I Want it That Way," as follows the text in random.txt .
+  	// Using the fs Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+  	// By default it will run spotify-this-song  for "I Want it That Way," as follows the text in random.txt 
 	
 	fs.readFile("random.txt", "utf8", function(error, data) {
 		if (error){
@@ -161,24 +161,30 @@ function doIt(){
 		  	console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
 		} else { 
 		  // console.log(data);
+		  // removes quotation marks from strings 
 		  var cleanData = data.replace(/['"]+/g, '');
 
 		  // console.log(cleanData);
 		  // console.log(typeof cleanData);
 		  // console.log(cleanData.length);
+
+		  // splits the remaining data into an array at the comma
 		  var commands = cleanData.split(",");
 
 		  // console.log(commands[0]);
 		  // console.log(commands[1]);		  
 
 		  for(i=0;i<commands.length;i++)
+		  	// each "command" from the text file is assigned as an argument 
 		  	process.argv[i+2] = commands[i];
 
 		  }
+
+		  // TEST
+		  // console.log(process.argv[2]);
+		  // console.log(process.argv[3]);
 		  
-		  console.log(process.argv[2]);
-		  console.log(process.argv[3]);
-		  
+		  // switch statement uses data from random.txt to run LIRI.js functions
 		  var action = process.argv[2];
 
 			switch (action) {
