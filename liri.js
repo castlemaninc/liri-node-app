@@ -146,7 +146,7 @@ function movieLookUp(){
 	  	//  Rotten Tomatoes Rating.
 	  	console.log("Rotten Tomatoes Rating: " + obj.Ratings[1].Value);
 	  	// Rotten Tomatoes URL 
-	  	console.log("Rotten Tomatoes URL: " + obj.tomatoURL)  	
+	  	console.log("Rotten Tomatoes URL: " + obj.tomatoURL); 	
 	  	console.log("----------");
 	  }	  
 	});
