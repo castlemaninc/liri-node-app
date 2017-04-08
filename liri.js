@@ -109,7 +109,7 @@ function movieLookUp(){
 		movie = "Mr+Nobody";
 	}
 
-	var movieQueryURL = "http://www.omdbapi.com/?t=" + movie;
+	var movieQueryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=full&tomatoes=true&r=json";
 
 	// console.log(movieQueryURL)
 	// console.log("Searching for:" + movie);
@@ -144,7 +144,9 @@ function movieLookUp(){
 	  	//  Actors in the movie.
 	  	console.log("Actors: " + obj["Actors"]);
 	  	//  Rotten Tomatoes Rating.
-	  	console.log("Rotten Tomatoes Rating: " + obj.Ratings[1].Value);  	
+	  	console.log("Rotten Tomatoes Rating: " + obj.Ratings[1].Value);
+	  	// Rotten Tomatoes URL 
+	  	console.log("Rotten Tomatoes URL: " + obj.tomatoURL)  	
 	  	console.log("----------");
 	  }	  
 	});
