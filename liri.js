@@ -51,7 +51,7 @@ function listTweets(){
 	  		
 	  	}
 	});
-};		
+}		
 
 
 // SPOTIFY
@@ -91,7 +91,7 @@ function spotifyThis(){
 	    }
  
 	});
-};
+}
 
 // OMDB API using REQUEST
 function movieLookUp(){	
@@ -102,7 +102,7 @@ function movieLookUp(){
 	for (i=4;i<nodeArgs.length;i++){
 		// stores arguments into a string separted by + symbol		
 		movie += "+" + nodeArgs[i];
-	};
+	}
 
 	//  If the user doesn't type a movie in, the program will output data for the movie 'Mr. Nobody.'
 	if (nodeArgs[3] === undefined){
@@ -128,7 +128,7 @@ function movieLookUp(){
 	  	var obj = JSON.parse(body);
 	  	// console.log(obj);
 
-	  	console.log("----------")
+	  	console.log("----------");
 	  	// Title of the movie.
 	  	console.log("Title: " + obj["Title"]);
 	  	// Year the movie came out.
@@ -205,5 +205,3 @@ function doIt(){
 
 		});
 }
-
-
