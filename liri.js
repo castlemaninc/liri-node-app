@@ -1,6 +1,7 @@
 var Request = require('request');
 var Spotify = require('spotify'); 
 var Twitter = require('twitter');
+var fs = require('fs');
 
 // 4. At the top of the  liri.js  file, write the code you need to grab the data from keys.js. Then store the keys in a variable.
 
@@ -12,12 +13,30 @@ var client = new Twitter(keys.twitterKeys);
 	// console.log(keys.twitterKeys);
 	// console.log(keys.twitterKeys.consumer_key);
 
+var action = process.argv[2];
+
+switch (action) {
+  case "my-tweets":
+    listTweets();
+    break;
+
+  case "spotify-this-song":
+    spotifyThis();
+    break;
+
+  case "movie-this":
+    movieLookUp();
+    break;
+
+  case "do-what-it-says":
+    doIt();
+    break;
+}
 
 // TWITTER 
 
 // This will show my last 20 tweets and when they were created in terminal/bash
-if (process.argv[2] === "my-tweets"){	
-
+function listTweets(){
 	var params = {screen_name: "wutup_castleman"};	
 
 	client.get('search/tweets', {q: "wutup_castleman"}, function(error, tweets, response){
@@ -33,11 +52,11 @@ if (process.argv[2] === "my-tweets"){
 	  		
 	  	}
 	});
-		
-};
+};		
+
 
 // SPOTIFY
-if (process.argv[2] === 'spotify-this-song'){
+function spotifyThis(){
 	
 	//  node liri.js spotify-this-song '<song name here>' 
 	var nodeArgs = process.argv; 
@@ -46,7 +65,8 @@ if (process.argv[2] === 'spotify-this-song'){
 	for (i=3;i<nodeArgs.length;i++){	
   		song = song + " " + nodeArgs[i];
 	}
-	
+
+	// if no song is provided the default song "Midnight City" will be queried
 	if (nodeArgs.length === 3){
 		song = "Midnight City";
 	}
@@ -72,14 +92,12 @@ if (process.argv[2] === 'spotify-this-song'){
 	    }
  
 	});
-	// ◦if no song is provided then your program will default to
-	// ◾"The Sign" by Ace of Base
+	
 
 };
 
 // OMDB API using REQUEST
-if (process.argv[2] === 'movie-this'){
-	console.log("Movie this?");
+function movieLookUp(){	
 
 	var nodeArgs = process.argv; 
 	var movie = nodeArgs[3];
@@ -96,10 +114,9 @@ if (process.argv[2] === 'movie-this'){
 	var movieQueryURL = "http://www.omdbapi.com/?t=" + movie;
 
 	// console.log(movieQueryURL)
+	// console.log("Searching for:" + movie);
 
-	console.log("Searching for:" + movie);
-
-	request(movieQueryURL, function (error, response, body) {
+	Request(movieQueryURL, function (error, response, body) {
 
 	  if (error){
 	  	console.log('error:', error); // Print the error if one occurred 
@@ -127,21 +144,58 @@ if (process.argv[2] === 'movie-this'){
 	  	//  Actors in the movie.
 	  	console.log("Actors: " + obj["Actors"]);
 	  	//  Rotten Tomatoes Rating.
-	  	console.log("Rotten Tomatoes Rating: " + obj.Ratings[1].Value);
-	  	//  Rotten Tomatoes URL.
-	  	console.log("Rotten Tomatoes URL: ");	  	
+	  	console.log("Rotten Tomatoes Rating: " + obj.Ratings[1].Value);  	
 	  	console.log("----------");
 	  }	  
 	});
 }
 
-if (process.argv[2] === 'do-what-it-says'){
-	console.log("I can do what it says!");
+function doIt(){
 
-	// 	◦Using the  fs  Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.◾It should run  spotify-this-song  for "I Want it That Way," as follows the text in  random.txt .
-	// ◾Feel free to change the text in that document to test out the feature for other commands.
+  	// Using the  fs  Node package, LIRI will take the text inside of random.txt and then use it to call one of LIRI's commands.
+  	// It should run  spotify-this-song  for "I Want it That Way," as follows the text in random.txt .
+	
+	fs.readFile("random.txt", "utf8", function(error, data) {
+		if (error){
+		  	console.log('error:', error); // Print the error if one occurred 
+		  	console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received 
+		} else { 
+		  // console.log(data);
+		  var cleanData = data.replace(/['"]+/g, '');
 
+		  // console.log(cleanData);
+		  // console.log(typeof cleanData);
+		  // console.log(cleanData.length);
+		  var commands = cleanData.split(",");
 
+		  // console.log(commands[0]);
+		  // console.log(commands[1]);		  
+
+		  for(i=0;i<commands.length;i++)
+		  	process.argv[i+2] = commands[i];
+
+		  }
+		  
+		  console.log(process.argv[2]);
+		  console.log(process.argv[3]);
+		  
+		  var action = process.argv[2];
+
+			switch (action) {
+			  case "my-tweets":
+			    listTweets();
+			    break;
+
+			  case "spotify-this-song":			  	
+			    spotifyThis();
+			    break;
+
+			  case "movie-this":
+			    movieLookUp();
+			    break;
+			}
+
+		});
 }
 
 
